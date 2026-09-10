@@ -1,0 +1,14 @@
+cmake_minimum_required(VERSION 3.13)
+
+set(GEODE_DONT_INCLUDE_DEFAULT_SRC ON)
+find_package(Geode REQUIRED)
+
+project(GDExpansion)
+
+add_geode_mod(
+    yourname.update23_expansion
+    VERSION 1.0.0
+    RESOURCES
+    src/main.cpp
+)
+045820

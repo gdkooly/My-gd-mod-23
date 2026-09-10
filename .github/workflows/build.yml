@@ -1,0 +1,54 @@
+name: Build Geode Mod
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: Windows
+            os: windows-latest
+
+          - name: macOS
+            os: macos-latest
+
+          - name: Android
+            os: ubuntu-latest
+            target: Android
+
+    name: Build ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build Mod
+        uses: geode-sdk/build-geode-mod@main
+        with:
+          bindings: geode-sdk/bindings
+          target: ${{ matrix.config.target }}
+          combine: true
+
+  package:
+    name: Package Mod Files
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Merge and Package Platforms
+        uses: geode-sdk/build-geode-mod/combine@main
+        id: build
+
+      - name: Upload Finished Mod File
+        uses: actions/upload-artifact@v4
+        with:
+          name: update23-expansion-mod
+          path: ${{ steps.build.outputs.build-output }}
+

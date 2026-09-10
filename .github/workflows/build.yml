@@ -23,12 +23,14 @@ jobs:
         with:
           ndk-version: r26b
 
-      - name: Download Geode CLI
+      - name: Install Geode CLI Manually
         run: |
-          wget https://github.com
-          unzip geode-cli-linux.zip
+          # Fetch and install the latest stable Linux Geode CLI directly from official releases
+          curl -sSLo geode-cli.zip https://github.com
+          unzip geode-cli.zip
           chmod +x geode
           sudo mv geode /usr/local/bin/
+          geode --version
 
       - name: Build Mod with CMake
         run: |
@@ -36,4 +38,3 @@ jobs:
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release -DGEODE_TARGET=Android
           cmake --build . --config Release
-

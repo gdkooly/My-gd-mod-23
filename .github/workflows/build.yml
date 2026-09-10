@@ -8,33 +8,43 @@ on:
 
 jobs:
   build:
-    name: Build Android Mod
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: Android
+            os: ubuntu-latest
+            target: Android
+
+    name: Build ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Ninja
-        uses: ashutoshvarma/setup-ninja@master
-
-      - name: Set up Android NDK
-        uses: nttld/setup-ndk@v1
+      - name: Build Mod
+        uses: geode-sdk/build-geode-mod@main
         with:
-          ndk-version: r26b
+          target: ${{ matrix.config.target }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install Geode CLI Manually
-        run: |
-          # Fetch and install the latest stable Linux Geode CLI directly from official releases
-          curl -sSLo geode-cli.zip https://github.com
-          unzip geode-cli.zip
-          chmod +x geode
-          sudo mv geode /usr/local/bin/
-          geode --version
+  package:
+    name: Package Mod Files
+    needs: build
+    runs-on: ubuntu-latest
 
-      - name: Build Mod with CMake
-        run: |
-          mkdir build
-          cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DGEODE_TARGET=Android
-          cmake --build . --config Release
+    steps:
+      - name: Merge and Package Platforms
+        uses: geode-sdk/build-geode-mod/combine@main
+        id: build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Finished Mod File
+        uses: actions/upload-artifact@v4
+        with:
+          name: update23-expansion-mod
+          path: ${{ steps.build.outputs.build-output }}
+

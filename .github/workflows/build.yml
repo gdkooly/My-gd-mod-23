@@ -27,24 +27,4 @@ jobs:
         uses: geode-sdk/build-geode-mod@main
         with:
           target: ${{ matrix.config.target }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  package:
-    name: Package Mod Files
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Merge and Package Platforms
-        uses: geode-sdk/build-geode-mod/combine@main
-        id: build
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Finished Mod File
-        uses: actions/upload-artifact@v4
-        with:
-          name: update23-expansion-mod
-          path: ${{ steps.build.outputs.build-output }}
 

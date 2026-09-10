@@ -1,0 +1,23 @@
+{
+    "geode": "4.0.0",
+    "id": "yourname.update23_expansion",
+    "version": "1.0.0",
+    "name": "2.3 & Drive Mode Expansion",
+    "developer": "YourName",
+    "description": "Unlocks Versus Mode/The Map, introduces Theory of Everything 3, expanded icons, and the Platformer Drive Gamemode.",
+    "dependencies": [
+        {
+            "id": "geode.loader",
+            "version": "v4.0.0"
+        }
+    ],
+    "settings": {
+        "enable-drive-mode": {
+            "type": "bool",
+            "default": true,
+            "name": "Enable Drive Physics",
+            "description": "Enables the fan-trailer platformer car physics overrides."
+        }
+    }
+}
+

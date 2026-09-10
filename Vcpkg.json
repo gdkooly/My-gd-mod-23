@@ -1,0 +1,10 @@
+{
+  "name": "update23-expansion",
+  "version": "1.0.0",
+  "dependencies": [
+    {
+      "name": "geode",
+      "version": "*"
+    }
+  ]
+}

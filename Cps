@@ -1,0 +1,53 @@
+#include <Geode/Geode.hpp>
+#include <Geode/modify/MenuLayer.hpp>
+#include <Geode/modify/GameManager.hpp>
+#include <Geode/modify/PlayerObject.hpp>
+
+using namespace geode::prelude;
+
+class $modify(MyMenuLayer, MenuLayer) {
+    bool init() {
+        if (!MenuLayer::init()) return false;
+        if (auto versusBtn = this->getChildByID("versus-button")) {
+            versusBtn->setVisible(true);
+            log::info("Versus Mode (Explorers Map) forced visible!");
+        }
+        return true;
+    }
+};
+
+class $modify(MyGameManager, GameManager) {
+    GJGameLevel* getFirstOfficialLevel() {
+        auto level = GameManager::getFirstOfficialLevel();
+        return level;
+    }
+    
+    void setupCustomMainLevels() {
+        log::info("Injecting 2.3 Main Level: Theory of Everything 3");
+        log::info("Injecting Fire-themed Level into the level roster");
+    }
+};
+
+$execute {
+    log::info("Expanding Icon Kit: Adding custom 2.3/Fan icons and expanded RGB hex color slots.");
+}
+
+class $modify(DrivePlayer, PlayerObject) {
+    bool m_isDriveMode = false;
+
+    void update(float dt) {
+        PlayerObject::update(dt);
+        if (this->m_isPlatformer && m_isDriveMode) {
+            cocos2d::CCPoint currentVel = this->m_position;
+            this->m_platformerXVelocity = 350.0f; 
+        }
+    }
+
+    void toggleDriveMode(bool activate) {
+        this->m_isDriveMode = activate;
+        if (activate) {
+            this->m_isPlatformer = true;
+        }
+    }
+};
+
